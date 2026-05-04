@@ -497,6 +497,48 @@ footer .footer-copy { font-size: 12px; color: var(--green-600); }
   padding: 6px 14px; border-radius: 50px;
 }
 
+/* ── DATE PICKER custom styling ── */
+input[type="date"].form-input {
+  appearance: none; -webkit-appearance: none;
+  color: var(--gray-800); cursor: pointer; position: relative;
+}
+input[type="date"].form-input::-webkit-calendar-picker-indicator {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%232d7a35' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'%3E%3C/rect%3E%3Cline x1='16' y1='2' x2='16' y2='6'%3E%3C/line%3E%3Cline x1='8' y1='2' x2='8' y2='6'%3E%3C/line%3E%3Cline x1='3' y1='10' x2='21' y2='10'%3E%3C/line%3E%3C/svg%3E");
+  cursor: pointer; opacity: 0.8; padding: 2px;
+}
+input[type="date"].form-input::-webkit-inner-spin-button { display: none; }
+input[type="date"].form-input::-webkit-datetime-edit-fields-wrapper { padding: 0; }
+
+/* ── PHOTO UPLOAD ── */
+.photo-upload-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+}
+.photo-slot {
+  aspect-ratio: 1 / 1; border-radius: var(--radius); border: 2px dashed var(--green-300);
+  background: var(--green-50); cursor: pointer; position: relative; overflow: hidden;
+  transition: all 0.2s; display: flex; align-items: center; justify-content: center;
+}
+.photo-slot:hover { border-color: var(--green-500); background: var(--green-100); }
+.photo-slot.has-photo { border-style: solid; border-color: var(--green-400); }
+.photo-placeholder {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 4px; text-align: center; padding: 8px; pointer-events: none;
+}
+.photo-placeholder span { font-size: 12px; font-weight: 700; color: var(--green-700); }
+.photo-placeholder .photo-sub { font-size: 10px; color: var(--green-500); font-weight: 400; }
+.photo-preview {
+  width: 100%; height: 100%; object-fit: cover;
+  position: absolute; inset: 0; border-radius: calc(var(--radius) - 2px);
+}
+.photo-remove {
+  position: absolute; top: 5px; right: 5px; width: 22px; height: 22px;
+  border-radius: 50%; background: rgba(239,68,68,0.9); color: white;
+  border: none; cursor: pointer; font-size: 11px; font-weight: 700;
+  display: none; align-items: center; justify-content: center;
+  z-index: 2; transition: background 0.15s; line-height: 1;
+}
+.photo-remove:hover { background: #dc2626; }
+
 /* SCROLL ANIMATIONS */
 .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.55s ease, transform 0.55s ease; }
 .reveal.visible { opacity: 1; transform: translateY(0); }
@@ -1205,11 +1247,12 @@ document.getElementById('bookingForm').addEventListener('submit', async function
   const service = document.getElementById('f-service').value;
   const area    = document.getElementById('f-area').value;
   const date    = document.getElementById('f-date').value;
+  const dateDisplay = formatDateDisplay(date);
   const notes   = document.getElementById('f-notes').value.trim();
 
   const payload = {
     timestamp: new Date().toISOString(),
-    name, phone, address, service, area, schedule: date, notes
+    name, phone, address, service, area, schedule: dateDisplay, notes
   };
 
   // Save to localStorage for funnel tracking
@@ -1224,7 +1267,7 @@ Nama: ${name}
 Layanan: ${service}
 Lokasi: ${address}
 Luas: ${area} m²
-Tanggal: ${date}${notes ? '\nCatatan: ' + notes : ''}
+Tanggal: ${dateDisplay}${notes ? '\nCatatan: ' + notes : ''}
 
 Mohon info jadwal & harga. Terima kasih!`;
 
