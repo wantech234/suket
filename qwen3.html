@@ -95,7 +95,7 @@
             margin-bottom: 0.5rem;
             text-transform: uppercase;
         }
-
+/*
         .highlight {
             background: linear-gradient(120deg, #fef3c7 0%, #fde68a 100%);
             padding: 0.2rem 0.6rem;
@@ -103,7 +103,7 @@
             font-weight: 700;
             color: var(--primary-dark);
         }
-
+*/
         /* Navigation */
         .navbar {
             position: fixed;
@@ -161,7 +161,7 @@
             text-decoration: none;
             color: var(--text);
             font-weight: 600;
-            font-size: 0.95rem;
+            /*font-size: 0.95rem;*/
             transition: color 0.3s;
             position: relative;
             text-transform: uppercase;
@@ -223,7 +223,7 @@
             background: radial-gradient(circle, rgba(26,107,53,0.1) 0%, transparent 70%);
             border-radius: 50%;
         }
-
+/*
         .hero::after {
             content: '';
             position: absolute;
@@ -234,6 +234,7 @@
             background: radial-gradient(circle, rgba(245,158,11,0.1) 0%, transparent 70%);
             border-radius: 50%;
         }
+*/
 
         .hero-container {
             display: grid;
@@ -294,14 +295,14 @@
             box-shadow: 0 6px 20px rgba(245,158,11,0.4);
             transform: rotate(-2deg);
         }
-
+/*
         .hero-price span {
             display: block;
             font-size: 0.9rem;
             font-weight: 600;
             margin-top: 0.25rem;
         }
-
+*/
         .hero-buttons {
             display: flex;
             gap: 1rem;
@@ -380,7 +381,7 @@
             border: 3px solid var(--border);
         }
 
-        .before-after-mini .label {
+        .before-after-mini .ba-label {
             position: absolute;
             top: 10px;
             left: 10px;
@@ -392,7 +393,7 @@
             font-size: 0.8rem;
         }
 
-        .before-after-mini .label.after {
+        .before-after-mini .ba-label.after {
             background: #22c55e;
             left: auto;
             right: 10px;
@@ -422,7 +423,7 @@
         .stat-item p {
             opacity: 0.95;
             font-weight: 600;
-            font-size: 1rem;
+            /*font-size: 1rem;*/
         }
 
         /* Problems Section */
@@ -568,6 +569,7 @@
             font-size: 0.9rem;
         }
 
+/*
         .price {
             font-size: 1.4rem;
             font-weight: 800;
@@ -580,7 +582,7 @@
             border-radius: 10px;
             text-align: center;
         }
-
+*/
         /* Before After Slider */
         .portfolio {
             background: white;
@@ -616,7 +618,25 @@
         .comparison-image.before {
             width: 50%;
             z-index: 2;
+        .comparison-image.after {
+            z-index: 1;
+        }
+
+        .slider-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 50%;
+            height: 100%;
+            z-index: 3;
+            overflow: hidden;
+            transition: width 0.3s ease;
+        }
+
+        .slider-overlay .comparison-image.before {
+            width: 200%;
             border-right: 4px solid white;
+            box-shadow: 5px 0 15px rgba(0,0,0,0.3);
         }
 
         .slider-handle {
