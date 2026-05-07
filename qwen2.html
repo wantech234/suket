@@ -1,0 +1,1990 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Reresik Suket - Jasa Potong Rumput Profesional di Yogyakarta dan Sekitarnya">
+    <meta name="theme-color" content="#2E7D32">
+    <title>Reresik Suket - Jasa Potong Rumput Profesional</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiUmVyZXNpayBTdWtldCIsInNob3J0X25hbWUiOiJSZXJlc2lrIFN1a2V0IiwiZGVzY3JpcHRpb24iOiJKYXNhIFBvdG9uZyBSdW1wdXQgUHJvZmVzc2lvbmFsIiwic3RhcnRfdXJsIjoiLiIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiNmZmZmZmYiLCJ0aGVtZV9jb2xvciI6IiMyRTdEMzIifQ==">
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #2E7D32;
+            --secondary-color: #66BB6A;
+            --accent-color: #FFA726;
+            --dark-color: #1B5E20;
+            --light-color: #E8F5E9;
+            --text-color: #333;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: var(--white);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            padding: 0.5rem 0;
+            background: rgba(255,255,255,0.98);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            color: var(--accent-color);
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-menu a:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: width 0.3s;
+        }
+
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: var(--primary-color);
+            transition: all 0.3s;
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 70px;
+            background: linear-gradient(135deg, var(--light-color) 0%, var(--white) 100%);
+            padding: 4rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: var(--secondary-color);
+            opacity: 0.1;
+            border-radius: 50%;
+        }
+
+        .hero-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .hero-content h1 {
+            font-size: 3rem;
+            color: var(--dark-color);
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero-content .slogan {
+            font-size: 1.5rem;
+            color: var(--accent-color);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .hero-content p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            color: #666;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: var(--dark-color);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(46,125,50,0.3);
+        }
+
+        .btn-secondary {
+            background: var(--accent-color);
+            color: var(--white);
+        }
+
+        .btn-secondary:hover {
+            background: #F57C00;
+            transform: translateY(-3px);
+        }
+
+        .hero-image {
+            position: relative;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .hero-image img {
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        /* Stats Section */
+        .stats {
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 3rem 2rem;
+        }
+
+        .stats-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .stat-item h3 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-item p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        /* Services Section */
+        .services {
+            padding: 5rem 2rem;
+            background: var(--white);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--dark-color);
+            margin-bottom: 1rem;
+        }
+
+        .section-title p {
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .services-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .service-card {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--secondary-color);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .service-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--light-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+            color: var(--primary-color);
+        }
+
+        .service-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--dark-color);
+        }
+
+        /* Before After Section */
+        .before-after {
+            padding: 5rem 2rem;
+            background: var(--light-color);
+        }
+
+        .comparison-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .comparison-slider {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .comparison-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .comparison-image.before {
+            width: 50%;
+            border-right: 3px solid var(--white);
+            z-index: 2;
+        }
+
+        .comparison-image.after {
+            z-index: 1;
+        }
+
+        .slider-handle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            background: var(--white);
+            border-radius: 50%;
+            z-index: 3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: ew-resize;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .slider-handle i {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+        }
+
+        .comparison-labels {
+            position: absolute;
+            top: 20px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 4;
+            pointer-events: none;
+        }
+
+        .label {
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        /* Track Map Section */
+        .track-section {
+            padding: 5rem 2rem;
+            background: var(--white);
+        }
+
+        #trackMap {
+            height: 600px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            z-index: 1;
+            margin-bottom: 2rem;
+        }
+
+        .track-stats {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .track-stat-card {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .track-stat-card h4 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* YouTube Section */
+        .youtube-section {
+            padding: 5rem 2rem;
+            background: var(--light-color);
+        }
+
+        .youtube-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .youtube-card {
+            background: var(--white);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .youtube-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .youtube-thumbnail {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            background: #000;
+            cursor: pointer;
+        }
+
+        .youtube-thumbnail img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70px;
+            height: 70px;
+            background: rgba(255,0,0,0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            transition: transform 0.3s;
+        }
+
+        .youtube-thumbnail:hover .play-button {
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .youtube-info {
+            padding: 1.5rem;
+        }
+
+        .youtube-info h3 {
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .youtube-info p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Video Modal */
+        .video-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .video-modal.active {
+            display: flex;
+        }
+
+        .video-container {
+            width: 90%;
+            max-width: 1000px;
+            position: relative;
+        }
+
+        .video-container iframe {
+            width: 100%;
+            aspect-ratio: 16/9;
+            border: none;
+        }
+
+        .close-video {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        /* WhatsApp Testimonial Animation */
+        .wa-testimonial-section {
+            padding: 5rem 2rem;
+            background: linear-gradient(135deg, #128C7E 0%, #25D366 100%);
+            color: white;
+            overflow: hidden;
+        }
+
+        .wa-testimonial-section .section-title h2 {
+            color: white;
+        }
+
+        .wa-testimonial-section .section-title p {
+            color: rgba(255,255,255,0.9);
+        }
+
+        .wa-container {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 600px;
+        }
+
+        .wa-phone {
+            width: 100%;
+            max-width: 400px;
+            background: #e5ddd5;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .wa-header {
+            background: #075E54;
+            color: white;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .wa-header-avatar {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #075E54;
+            font-weight: bold;
+        }
+
+        .wa-header-info h4 {
+            font-size: 1rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .wa-header-info p {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        .wa-chat {
+            padding: 1rem;
+            min-height: 400px;
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.05"><rect fill="%23000" width="100" height="100"/></svg>');
+        }
+
+        .wa-message {
+            margin-bottom: 1rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: messageAppear 0.5s forwards;
+        }
+
+        @keyframes messageAppear {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .wa-message.received {
+            display: flex;
+            align-items: flex-end;
+            gap: 0.5rem;
+        }
+
+        .wa-message.sent {
+            display: flex;
+            align-items: flex-end;
+            gap: 0.5rem;
+            flex-direction: row-reverse;
+        }
+
+        .wa-bubble {
+            max-width: 75%;
+            padding: 0.8rem;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            position: relative;
+        }
+
+        .wa-message.received .wa-bubble {
+            background: white;
+            color: #333;
+            border-bottom-left-radius: 5px;
+        }
+
+        .wa-message.sent .wa-bubble {
+            background: #DCF8C6;
+            color: #333;
+            border-bottom-right-radius: 5px;
+        }
+
+        .wa-time {
+            font-size: 0.7rem;
+            color: #999;
+            margin-top: 0.3rem;
+            text-align: right;
+        }
+
+        .wa-avatar-small {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.8rem;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .wa-typing {
+            display: none;
+            padding: 1rem;
+            background: rgba(255,255,255,0.5);
+            border-radius: 20px;
+            margin-bottom: 1rem;
+            width: fit-content;
+        }
+
+        .wa-typing.active {
+            display: block;
+            animation: messageAppear 0.3s;
+        }
+
+        .wa-typing-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #999;
+            border-radius: 50%;
+            margin: 0 2px;
+            animation: typing 1.4s infinite;
+        }
+
+        .wa-typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .wa-typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+
+        /* Registration Form */
+        .registration {
+            padding: 5rem 2rem;
+            background: var(--light-color);
+        }
+
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--white);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .gps-btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.8rem;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .gps-btn:hover {
+            background: #F57C00;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark-color);
+            color: white;
+            padding: 3rem 2rem 1rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+
+        .footer-section p, .footer-section a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            line-height: 2;
+        }
+
+        .footer-section a:hover {
+            color: var(--accent-color);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .social-links a:hover {
+            background: var(--accent-color);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.6);
+        }
+
+        /* WhatsApp Float Button */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #25D366;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: 0 5px 20px rgba(37,211,102,0.4);
+            cursor: pointer;
+            z-index: 999;
+            animation: pulse 2s infinite;
+            text-decoration: none;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-menu {
+                position: fixed;
+                left: -100%;
+                top: 70px;
+                flex-direction: column;
+                background: var(--white);
+                width: 100%;
+                text-align: center;
+                transition: 0.3s;
+                padding: 2rem 0;
+                box-shadow: 0 10px 27px rgba(0,0,0,0.05);
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .hero-container {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .comparison-slider {
+                height: 300px;
+            }
+
+            .youtube-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .wa-phone {
+                max-width: 100%;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loading.active {
+            display: flex;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255,255,255,0.3);
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Success Message */
+        .success-message {
+            display: none;
+            background: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: slideIn 0.5s;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Custom Marker Styles */
+        .custom-marker {
+            background: var(--primary-color);
+            border: 3px solid white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+        }
+
+        .custom-marker.business {
+            background: var(--accent-color);
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <i class="fas fa-leaf"></i>
+                <span>Reresik Suket</span>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="#home">Beranda</a></li>
+                <li><a href="#services">Layanan</a></li>
+                <li><a href="#portfolio">Portfolio</a></li>
+                <li><a href="#track">Track</a></li>
+                <li><a href="#videos">Video</a></li>
+                <li><a href="#testimonials">Testimoni</a></li>
+                <li><a href="#register">Pesan</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1>Reresik Suket</h1>
+                <p class="slogan">"Hijaukan Lingkungan, Rapikan Halaman"</p>
+                <p>Jasa potong rumput profesional di Yogyakarta dan sekitarnya. Kami siap melayani kebutuhan perawatan taman dan halaman Anda dengan hasil terbaik dan harga terjangkau.</p>
+                <div class="hero-buttons">
+                    <a href="#register" class="btn btn-primary">
+                        <i class="fas fa-calendar-check"></i>
+                        Pesan Sekarang
+                    </a>
+                    <a href="https://wa.me/6282214381966" class="btn btn-secondary" target="_blank">
+                        <i class="fab fa-whatsapp"></i>
+                        Hubungi Kami
+                    </a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="https://images.unsplash.com/photo-1558904541-efa843a96f01?w=600" alt="Lawn Mowing Service">
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="stats-container">
+            <div class="stat-item">
+                <h3>500+</h3>
+                <p>Proyek Selesai</p>
+            </div>
+            <div class="stat-item">
+                <h3>350+</h3>
+                <p>Pelanggan Puas</p>
+            </div>
+            <div class="stat-item">
+                <h3>5+</h3>
+                <p>Tahun Pengalaman</p>
+            </div>
+            <div class="stat-item">
+                <h3>7</h3>
+                <p>Kota Dilayani</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services" id="services">
+        <div class="section-title">
+            <h2>Layanan Kami</h2>
+            <p>Kami menyediakan berbagai layanan perawatan taman dan halaman untuk memenuhi kebutuhan Anda</p>
+        </div>
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-cut"></i>
+                </div>
+                <h3>Potong Rumput</h3>
+                <p>Pemotongan rumput profesional dengan peralatan modern untuk hasil yang rapi dan merata</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-seedling"></i>
+                </div>
+                <h3>Perawatan Taman</h3>
+                <p>Perawatan tanaman hias, pemupukan, dan penyiraman untuk taman yang asri</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-trash-alt"></i>
+                </div>
+                <h3>Pembersihan Halaman</h3>
+                <p>Pembersihan sampah daun, ranting, dan kotoran di area halaman Anda</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-tree"></i>
+                </div>
+                <h3>Pemangkasan Pohon</h3>
+                <p>Pemangkasan dan perapihan pohon serta tanaman perdu di halaman</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Before After Section -->
+    <section class="before-after" id="portfolio">
+        <div class="section-title">
+            <h2>Hasil Kerja Kami</h2>
+            <p>Lihat perbedaan sebelum dan sesudah layanan kami</p>
+        </div>
+        <div class="comparison-container">
+            <div class="comparison-slider" id="comparisonSlider">
+                <div class="comparison-image after" style="background-image: url('https://images.unsplash.com/photo-1558904541-efa843a96f01?w=1000')"></div>
+                <div class="comparison-image before" style="background-image: url('https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=1000')" id="beforeImage"></div>
+                <div class="comparison-labels">
+                    <span class="label">Sebelum</span>
+                    <span class="label">Sesudah</span>
+                </div>
+                <div class="slider-handle" id="sliderHandle">
+                    <i class="fas fa-arrows-alt-h"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Track Section with Map -->
+    <section class="track-section" id="track">
+        <div class="section-title">
+            <h2>Track Pelanggan Terbaru</h2>
+            <p>Lihat lokasi dan detail pekerjaan kami yang terbaru</p>
+        </div>
+        <div id="trackMap"></div>
+        <div class="track-stats">
+            <div class="track-stat-card">
+                <h4>10</h4>
+                <p>Proyek Bulan Ini</p>
+            </div>
+            <div class="track-stat-card">
+                <h4>8</h4>
+                <p>Kota Terjangkau</p>
+            </div>
+            <div class="track-stat-card">
+                <h4>100%</h4>
+                <p>Kepuasan Pelanggan</p>
+            </div>
+            <div class="track-stat-card">
+                <h4>24h</h4>
+                <p>Respon Cepat</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- YouTube Videos Section -->
+    <section class="youtube-section" id="videos">
+        <div class="section-title">
+            <h2>Video Dokumentasi</h2>
+            <p>Lihat proses pekerjaan kami dalam video</p>
+        </div>
+        <div class="youtube-grid" id="youtubeGrid">
+            <!-- Videos will be loaded dynamically -->
+        </div>
+    </section>
+
+    <!-- Video Modal -->
+    <div class="video-modal" id="videoModal">
+        <div class="video-container">
+            <button class="close-video" onclick="closeVideo()">
+                <i class="fas fa-times"></i>
+            </button>
+            <iframe id="videoFrame" src="" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <!-- WhatsApp Testimonial Animation Section -->
+    <section class="wa-testimonial-section" id="testimonials">
+        <div class="section-title">
+            <h2>Testimoni Pelanggan</h2>
+            <p>Apa kata mereka tentang layanan kami</p>
+        </div>
+        <div class="wa-container">
+            <div class="wa-phone">
+                <div class="wa-header">
+                    <div class="wa-header-avatar">RS</div>
+                    <div class="wa-header-info">
+                        <h4>Reresik Suket</h4>
+                        <p>Online</p>
+                    </div>
+                </div>
+                <div class="wa-chat" id="waChat">
+                    <!-- Messages will be animated here -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Registration Form -->
+    <section class="registration" id="register">
+        <div class="section-title">
+            <h2>Form Pemesanan</h2>
+            <p>Isi form di bawah untuk memesan layanan kami</p>
+        </div>
+        <div class="form-container">
+            <div class="success-message" id="successMessage">
+                <i class="fas fa-check-circle"></i> Pesanan berhasil dikirim! Kami akan menghubungi Anda via WhatsApp.
+            </div>
+            <form id="orderForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nama">Nama Lengkap *</label>
+                        <input type="text" id="nama" name="nama" required placeholder="Masukkan nama lengkap">
+                    </div>
+                    <div class="form-group">
+                        <label for="telepon">Nomor Telepon *</label>
+                        <input type="tel" id="telepon" name="telepon" required placeholder="08xx-xxxx-xxxx">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="alamat">Alamat Lengkap *</label>
+                    <textarea id="alamat" name="alamat" rows="3" required placeholder="Masukkan alamat lengkap"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Lokasi GPS *</label>
+                    <button type="button" class="gps-btn" id="getGPS">
+                        <i class="fas fa-location-crosshairs"></i>
+                        Dapatkan Lokasi GPS
+                    </button>
+                    <input type="text" id="gps" name="gps" readonly placeholder="Klik tombol di atas untuk mendapatkan lokasi" style="margin-top: 0.5rem;">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="jenisLayanan">Jenis Layanan *</label>
+                        <select id="jenisLayanan" name="jenisLayanan" required>
+                            <option value="">Pilih Layanan</option>
+                            <option value="Potong Rumput">Potong Rumput</option>
+                            <option value="Perawatan Taman">Perawatan Taman</option>
+                            <option value="Pembersihan Halaman">Pembersihan Halaman</option>
+                            <option value="Pemangkasan Pohon">Pemangkasan Pohon</option>
+                            <option value="Paket Lengkap">Paket Lengkap</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="luasLahan">Luas Lahan (m²) *</label>
+                        <input type="number" id="luasLahan" name="luasLahan" required placeholder="Contoh: 100">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="tanggal">Tanggal Pengerjaan *</label>
+                        <input type="date" id="tanggal" name="tanggal" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="kota">Kota/Kabupaten *</label>
+                        <select id="kota" name="kota" required>
+                            <option value="">Pilih Kota</option>
+                            <option value="Yogyakarta">Yogyakarta</option>
+                            <option value="Sleman">Sleman</option>
+                            <option value="Bantul">Bantul</option>
+                            <option value="Solo">Solo</option>
+                            <option value="Boyolali">Boyolali</option>
+                            <option value="Surakarta">Surakarta</option>
+                            <option value="Magelang">Magelang</option>
+                            <option value="Purworejo">Purworejo</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="catatan">Catatan Tambahan</label>
+                    <textarea id="catatan" name="catatan" rows="3" placeholder="Informasi tambahan atau permintaan khusus"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">
+                    <i class="fas fa-paper-plane"></i>
+                    Kirim Pesanan
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Reresik Suket</h3>
+                <p>Jasa potong rumput profesional yang siap melayani kebutuhan perawatan taman dan halaman Anda di Yogyakarta dan sekitarnya.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    <a href="#"><i class="fab fa-google"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Kontak Kami</h3>
+                <p><i class="fas fa-map-marker-alt"></i> Perumahan Wahana Praja<br>Jl. Drupadi no.50, Widodo Martani<br>Ngemplak, Sleman, Yogyakarta</p>
+                <p><i class="fas fa-phone"></i> 0822-1438-1966</p>
+                <p><i class="fas fa-envelope"></i> info@reresiksuket.com</p>
+            </div>
+            <div class="footer-section">
+                <h3>Jam Operasional</h3>
+                <p>Senin - Sabtu: 08.00 - 17.00</p>
+                <p>Minggu: By Appointment</p>
+                <p>Layanan darurat tersedia 24 jam</p>
+            </div>
+            <div class="footer-section">
+                <h3>Area Layanan</h3>
+                <p>Yogyakarta, Sleman, Bantul, Solo, Boyolali, Surakarta, Magelang, Purworejo</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Reresik Suket. All rights reserved. | Made with <i class="fas fa-heart" style="color: var(--accent-color);"></i> in Yogyakarta</p>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Float Button -->
+    <a href="https://wa.me/6282214381966?text=Halo%20Reresik%20Suket,%20saya%20tertarik%20dengan%20layanan%20Anda" class="whatsapp-float" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Loading Overlay -->
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Track Data in JSON Format
+        const trackData = [
+            {
+                id: 1,
+                nama: "Budi Santoso",
+                alamat: "Jl. Kaliurang KM 5, Sleman, Yogyakarta",
+                gps: [-7.7407, 110.4457],
+                tanggal: "2026-05-01",
+                layanan: "Potong Rumput",
+                luas: "150 m²",
+                komentar: "Hasilnya sangat memuaskan! Rumput halaman rumah saya jadi rapi dan bersih. Timnya profesional dan tepat waktu.",
+                fotoBefore: "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=400",
+                fotoAfter: "https://images.unsplash.com/photo-1558904541-efa843a96f01?w=400",
+                rating: 5
+            },
+            {
+                id: 2,
+                nama: "Ani Rahayu",
+                alamat: "Jl. Solo KM 7, Yogyakarta",
+                gps: [-7.7667, 110.4167],
+                tanggal: "2026-05-02",
+                layanan: "Perawatan Taman",
+                luas: "200 m²",
+                komentar: "Sudah 3 kali pakai jasa Reresik Suket untuk kantor kami. Hasil selalu konsisten bagus dan harga sangat terjangkau.",
+                fotoBefore: "https://images.unsplash.com/photo-1584738766473-61c083514bf4?w=400",
+                fotoAfter: "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=400",
+                rating: 5
+            },
+            {
+                id: 3,
+                nama: "Dedi Wijaya",
+                alamat: "Jl. Magelang KM 3, Yogyakarta",
+                gps: [-7.7833, 110.3500],
+                tanggal: "2026-05-03",
+                layanan: "Paket Lengkap",
+                luas: "300 m²",
+                komentar: "Pelayanan cepat dan responsif. Halaman rumah jadi hijau dan asri kembali. Sangat recommended!",
+                fotoBefore: "https://images.unsplash.com/photo-1598902108854-10e335adac99?w=400",
+                fotoAfter: "https://images.unsplash.com/photo-1558904541-efa843a96f01?w=400",
+                rating: 5
+            },
+            {
+                id: 4,
+                nama: "Siti Nurhaliza",
+                alamat: "Jl. Kaliurang KM 8, Sleman",
+                gps: [-7.7200, 110.4500],
+                tanggal: "2026-05-04",
+                layanan: "Potong Rumput",
+                luas: "120 m²",
+                komentar: "Pekerjaan rapi dan bersih. Harga sesuai dengan kualitas. Terima kasih Reresik Suket!",
+                fotoBefore: "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=400",
+                fotoAfter: "https://images.unsplash.com/photo-1558904541-efa843a96f01?w=400",
+                rating: 5
+            },
+            {
+                id: 5,
+                nama: "Ahmad Fauzi",
+                alamat: "Jl. Solo KM 10, Boyolali",
+                gps: [-7.5292, 110.6833],
+                tanggal: "2026-05-04",
+                layanan: "Pemangkasan Pohon",
+                luas: "250 m²",
+                komentar: "Tim sangat profesional dalam memangkas pohon besar di halaman. Aman dan rapi hasilnya.",
+                fotoBefore: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=400",
+                fotoAfter: "https://images.unsplash.com/photo-1598902108854-10e335adac99?w=400",
+                rating: 5
+            },
+            {
+                id: 6,
+                nama: "Rina Susanti",
+                alamat: "Jl. Magelang KM 5, Magelang",
+                gps: [-7.4833, 110.2167],
+                tanggal: "2026-05-05",
+                layanan: "Pembersihan Halaman",
+                luas: "180 m²",
+                komentar: "Halaman yang tadinya penuh sampah daun sekarang bersih. Sangat puas dengan hasilnya!",
+                fotoBefore: "https://images.unsplash.com/photo-1584738766473-61c083514bf4?w=400",
+                fotoAfter: "https://images.unsplash.com/photo-1558904541-efa843a96f01?w=400",
+                rating: 5
+            },
+            {
+                id: 7,
+                nama: "Joko Widodo",
+                alamat: "Jl. Purworejo KM 2, Purworejo",
+                gps: [-7.8500, 109.9833],
+                tanggal: "2026-05-05",
+                layanan: "Potong Rumput",
+                luas: "220 m²",
+                komentar: "Hasil potongan sangat rapi. Tim datang tepat waktu dan bekerja dengan efisien.",
+                fotoBefore: "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=400",
+                fotoAfter: "https://images.unsplash.com/photo-1558904541-efa843a96f01?w=400",
+                rating: 5
+            },
+            {
+                id: 8,
+                nama: "Dewi Lestari",
+                alamat: "Jl. Kaliurang KM 12, Sleman",
+                gps: [-7.7000, 110.4600],
+                tanggal: "2026-05-06",
+                layanan: "Perawatan Taman",
+                luas: "280 m²",
+                komentar: "Taman rumah jadi lebih indah dan terawat. Pemupukan dan penyiraman dilakukan dengan baik.",
+                fotoBefore: "https://images.unsplash.com/photo-1598902108854-10e335adac99?w=400",
+                fotoAfter: "https://images.unsplash.com/photo-1558904541-efa843a96f01?w=400",
+                rating: 5
+            },
+            {
+                id: 9,
+                nama: "Hendra Gunawan",
+                alamat: "Jl. Solo KM 5, Surakarta",
+                gps: [-7.4833, 110.8167],
+                tanggal: "2026-05-06",
+                layanan: "Paket Lengkap",
+                luas: "350 m²",
+                komentar: "Paket lengkapnya worth it! Semua dikerjakan dengan sempurna. Dari potong rumput sampai pemangkasan.",
+                fotoBefore: "https://images.unsplash.com/photo-1584738766473-61c083514bf4?w=400",
+                fotoAfter: "https://images.unsplash.com/photo-1558904541-efa843a96f01?w=400",
+                rating: 5
+            },
+            {
+                id: 10,
+                nama: "Lina Marlina",
+                alamat: "Jl. Bantul KM 3, Bantul",
+                gps: [-7.8753, 110.3264],
+                tanggal: "2026-05-07",
+                layanan: "Potong Rumput",
+                luas: "160 m²",
+                komentar: "Sangat puas! Rumput yang tadinya tinggi dan tidak rapi sekarang jadi indah dipandang.",
+                fotoBefore: "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=400",
+                fotoAfter: "https://images.unsplash.com/photo-1558904541-efa843a96f01?w=400",
+                rating: 5
+            }
+        ];
+
+        // YouTube Videos Data
+        const youtubeVideos = [
+            {
+                id: "dQw4w9WgXcQ",
+                title: "Proses Potong Rumput Halaman Luas 200m²",
+                description: "Dokumentasi pekerjaan potong rumput di Sleman",
+                thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
+                duration: "10:35"
+            },
+            {
+                id: "dQw4w9WgXcQ",
+                title: "Perawatan Taman Minimalis Modern",
+                description: "Tips dan trik perawatan taman agar tetap asri",
+                thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
+                duration: "8:22"
+            },
+            {
+                id: "dQw4w9WgXcQ",
+                title: "Pemangkasan Pohon Besar yang Aman",
+                description: "Teknik pemangkasan pohon profesional",
+                thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
+                duration: "12:15"
+            },
+            {
+                id: "dQw4w9WgXcQ",
+                title: "Before After Transformasi Halaman",
+                description: "Perubahan dramatis halaman rumah klien",
+                thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
+                duration: "5:45"
+            },
+            {
+                id: "dQw4w9WgXcQ",
+                title: "Pembersihan Halaman Penuh Sampah",
+                description: "Proses pembersihan total halaman",
+                thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
+                duration: "9:10"
+            },
+            {
+                id: "dQw4w9WgXcQ",
+                title: "Paket Lengkap Perawatan Taman",
+                description: "Semua layanan dalam satu paket",
+                thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
+                duration: "15:30"
+            }
+        ];
+
+        // WhatsApp Testimonials Data
+        const waTestimonials = [
+            {
+                name: "Budi Santoso",
+                initial: "BS",
+                message: "Halo, saya mau pesan jasa potong rumput untuk rumah saya di Sleman",
+                time: "08:30",
+                reply: "Halo Pak Budi! Baik, untuk lokasi di Sleman bisa. Kira-kira luas halamannya berapa m²?",
+                replyTime: "08:32"
+            },
+            {
+                name: "Ani Rahayu",
+                initial: "AR",
+                message: "Mau tanya harga untuk perawatan taman 200m² berapa ya?",
+                time: "09:15",
+                reply: "Untuk 200m² Rp 300.000 sudah termasuk potong rumput, pemupukan, dan pembersihan. Mau dijadwalkan kapan?",
+                replyTime: "09:17"
+            },
+            {
+                name: "Dedi Wijaya",
+                initial: "DW",
+                message: "Hasilnya bagus banget! Rumput jadi rapi dan bersih. Terima kasih!",
+                time: "14:20",
+                reply: "Terima kasih kembali Pak Dedi! Senang bisa membantu. Jangan lupa rekomendasikan ke teman-teman ya 😊",
+                replyTime: "14:25"
+            },
+            {
+                name: "Siti Nurhaliza",
+                initial: "SN",
+                message: "Bisa datang besok pagi jam 8?",
+                time: "16:45",
+                reply: "Bisa Bu Siti! Besok jam 8 tim kami akan datang ke lokasi. Alamatnya di Jl. Kaliurang KM 8 kan?",
+                replyTime: "16:47"
+            },
+            {
+                name: "Ahmad Fauzi",
+                initial: "AF",
+                message: "Saya mau potong 3 pohon besar di halaman, bisa?",
+                time: "10:00",
+                reply: "Bisa Pak Ahmad. Untuk pemangkasan 3 pohon besar estimasi Rp 500.000. Mau dijadwalkan kapan?",
+                replyTime: "10:05"
+            }
+        ];
+
+        // Mobile Menu Toggle
+        const hamburger = document.querySelector('.hamburger');
+        const navMenu = document.querySelector('.nav-menu');
+
+        hamburger.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                navMenu.classList.remove('active');
+            });
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Before/After Slider
+        const slider = document.getElementById('comparisonSlider');
+        const beforeImage = document.getElementById('beforeImage');
+        const sliderHandle = document.getElementById('sliderHandle');
+        let isDragging = false;
+
+        const updateSlider = (x) => {
+            const rect = slider.getBoundingClientRect();
+            let percentage = ((x - rect.left) / rect.width) * 100;
+            percentage = Math.max(0, Math.min(100, percentage));
+            beforeImage.style.width = percentage + '%';
+            sliderHandle.style.left = percentage + '%';
+        };
+
+        sliderHandle.addEventListener('mousedown', () => isDragging = true);
+        document.addEventListener('mouseup', () => isDragging = false);
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            updateSlider(e.clientX);
+        });
+
+        sliderHandle.addEventListener('touchstart', () => isDragging = true);
+        document.addEventListener('touchend', () => isDragging = false);
+        document.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            updateSlider(e.touches[0].clientX);
+        });
+
+        // Initialize Track Map
+        const trackMap = L.map('trackMap').setView([-7.7407, 110.4457], 10);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(trackMap);
+
+        // Add Business Location Marker
+        const businessIcon = L.divIcon({
+            className: 'custom-marker business',
+            html: '<i class="fas fa-store"></i>',
+            iconSize: [50, 50],
+            iconAnchor: [25, 25]
+        });
+
+        L.marker([-7.7407, 110.4457], {icon: businessIcon})
+            .addTo(trackMap)
+            .bindPopup('<b>Reresik Suket (Kantor)</b><br>Perumahan Wahana Praja<br>Jl. Drupadi no.50');
+
+        // Add Customer Markers
+        trackData.forEach((customer, index) => {
+            const markerIcon = L.divIcon({
+                className: 'custom-marker',
+                html: `${index + 1}`,
+                iconSize: [40, 40],
+                iconAnchor: [20, 20]
+            });
+
+            const marker = L.marker(customer.gps, {icon: markerIcon}).addTo(trackMap);
+            
+            marker.on('click', () => {
+                showCustomerDetail(customer);
+            });
+
+            marker.bindPopup(`<b>${customer.nama}</b><br>${customer.layanan}<br>${customer.tanggal}`);
+        });
+
+        // Fit bounds to show all markers
+        const group = new L.featureGroup([
+            L.marker([-7.7407, 110.4457]),
+            ...trackData.map(c => L.marker(c.gps))
+        ]);
+        trackMap.fitBounds(group.getBounds().pad(0.1));
+
+        // Show Customer Detail with SweetAlert2
+        function showCustomerDetail(customer) {
+            const stars = '★'.repeat(customer.rating) + '☆'.repeat(5 - customer.rating);
+            
+            Swal.fire({
+                title: `<strong>${customer.nama}</strong>`,
+                html: `
+                    <div style="text-align: left; padding: 1rem;">
+                        <p><i class="fas fa-map-marker-alt" style="color: var(--primary-color);"></i> <strong>Alamat:</strong><br>${customer.alamat}</p>
+                        <p><i class="fas fa-calendar" style="color: var(--primary-color);"></i> <strong>Tanggal:</strong> ${customer.tanggal}</p>
+                        <p><i class="fas fa-tools" style="color: var(--primary-color);"></i> <strong>Layanan:</strong> ${customer.layanan}</p>
+                        <p><i class="fas fa-ruler-combined" style="color: var(--primary-color);"></i> <strong>Luas:</strong> ${customer.luas}</p>
+                        <p><i class="fas fa-star" style="color: var(--accent-color);"></i> <strong>Rating:</strong> ${stars}</p>
+                        <p><i class="fas fa-comment" style="color: var(--primary-color);"></i> <strong>Komentar:</strong><br><em>"${customer.komentar}"</em></p>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+                            <div>
+                                <p style="text-align: center; margin-bottom: 0.5rem;"><strong>Sebelum</strong></p>
+                                <img src="${customer.fotoBefore}" style="width: 100%; border-radius: 10px;">
+                            </div>
+                            <div>
+                                <p style="text-align: center; margin-bottom: 0.5rem;"><strong>Sesudah</strong></p>
+                                <img src="${customer.fotoAfter}" style="width: 100%; border-radius: 10px;">
+                            </div>
+                        </div>
+                    </div>
+                `,
+                width: 800,
+                confirmButtonText: 'Tutup',
+                confirmButtonColor: '#2E7D32'
+            });
+        }
+
+        // Load YouTube Videos
+        function loadYouTubeVideos() {
+            const grid = document.getElementById('youtubeGrid');
+            youtubeVideos.forEach(video => {
+                const card = document.createElement('div');
+                card.className = 'youtube-card';
+                card.innerHTML = `
+                    <div class="youtube-thumbnail" onclick="playVideo('${video.id}')">
+                        <img src="${video.thumbnail}" alt="${video.title}">
+                        <div class="play-button">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="youtube-info">
+                        <h3>${video.title}</h3>
+                        <p>${video.description}</p>
+                        <p style="margin-top: 0.5rem; color: var(--accent-color);">
+                            <i class="far fa-clock"></i> ${video.duration}
+                        </p>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Play Video
+        function playVideo(videoId) {
+            const modal = document.getElementById('videoModal');
+            const iframe = document.getElementById('videoFrame');
+            iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+            modal.classList.add('active');
+        }
+
+        // Close Video
+        function closeVideo() {
+            const modal = document.getElementById('videoModal');
+            const iframe = document.getElementById('videoFrame');
+            iframe.src = '';
+            modal.classList.remove('active');
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('videoModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeVideo();
+            }
+        });
+
+        // WhatsApp Testimonial Animation
+        function animateWhatsAppTestimonial() {
+            const chat = document.getElementById('waChat');
+            let currentIndex = 0;
+
+            function addMessage() {
+                if (currentIndex >= waTestimonials.length) {
+                    currentIndex = 0;
+                    chat.innerHTML = ''; // Clear and restart
+                }
+
+                const testimonial = waTestimonials[currentIndex];
+                
+                // Add received message
+                const receivedDiv = document.createElement('div');
+                receivedDiv.className = 'wa-message received';
+                receivedDiv.innerHTML = `
+                    <div class="wa-avatar-small">${testimonial.initial}</div>
+                    <div>
+                        <div class="wa-bubble">
+                            ${testimonial.message}
+                            <div class="wa-time">${testimonial.time}</div>
+                        </div>
+                    </div>
+                `;
+                chat.appendChild(receivedDiv);
+
+                // Show typing indicator
+                setTimeout(() => {
+                    const typingDiv = document.createElement('div');
+                    typingDiv.className = 'wa-typing active';
+                    typingDiv.id = 'typing';
+                    typingDiv.innerHTML = `
+                        <div class="wa-bubble">
+                            <span class="wa-typing-dot"></span>
+                            <span class="wa-typing-dot"></span>
+                            <span class="wa-typing-dot"></span>
+                        </div>
+                    `;
+                    chat.appendChild(typingDiv);
+                    chat.scrollTop = chat.scrollHeight;
+                }, 1000);
+
+                // Add reply message
+                setTimeout(() => {
+                    const typing = document.getElementById('typing');
+                    if (typing) typing.remove();
+
+                    const sentDiv = document.createElement('div');
+                    sentDiv.className = 'wa-message sent';
+                    sentDiv.innerHTML = `
+                        <div>
+                            <div class="wa-bubble">
+                                ${testimonial.reply}
+                                <div class="wa-time">${testimonial.replyTime} ✓✓</div>
+                            </div>
+                        </div>
+                    `;
+                    chat.appendChild(sentDiv);
+                    chat.scrollTop = chat.scrollHeight;
+
+                    currentIndex++;
+                    // Random delay between 3-6 seconds
+                    setTimeout(addMessage, Math.random() * 3000 + 3000);
+                }, 2500);
+
+                chat.scrollTop = chat.scrollHeight;
+            }
+
+            // Start animation
+            addMessage();
+        }
+
+        // GPS Location
+        document.getElementById('getGPS').addEventListener('click', function() {
+            if (navigator.geolocation) {
+                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mendapatkan lokasi...';
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const gpsInput = document.getElementById('gps');
+                        gpsInput.value = `${position.coords.latitude}, ${position.coords.longitude}`;
+                        this.innerHTML = '<i class="fas fa-check"></i> Lokasi berhasil didapat';
+                        setTimeout(() => {
+                            this.innerHTML = '<i class="fas fa-location-crosshairs"></i> Dapatkan Lokasi GPS';
+                        }, 2000);
+                    },
+                    (error) => {
+                        alert('Gagal mendapatkan lokasi. Pastikan GPS aktif.');
+                        this.innerHTML = '<i class="fas fa-location-crosshairs"></i> Dapatkan Lokasi GPS';
+                    }
+                );
+            } else {
+                alert('Browser Anda tidak mendukung GPS');
+            }
+        });
+
+        // Form Submission
+        document.getElementById('orderForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const loading = document.getElementById('loading');
+            const successMessage = document.getElementById('successMessage');
+            const formData = new FormData(this);
+            
+            const data = {
+                timestamp: new Date().toISOString(),
+                nama: formData.get('nama'),
+                telepon: formData.get('telepon'),
+                alamat: formData.get('alamat'),
+                gps: formData.get('gps'),
+                jenisLayanan: formData.get('jenisLayanan'),
+                luasLahan: formData.get('luasLahan'),
+                tanggal: formData.get('tanggal'),
+                kota: formData.get('kota'),
+                catatan: formData.get('catatan')
+            };
+
+            loading.classList.add('active');
+
+            try {
+                const whatsappMessage = `
+*Pesanan Baru - Reresik Suket*
+
+Nama: ${data.nama}
+Telepon: ${data.telepon}
+Alamat: ${data.alamat}
+GPS: ${data.gps}
+Layanan: ${data.jenisLayanan}
+Luas Lahan: ${data.luasLahan} m²
+Tanggal: ${data.tanggal}
+Kota: ${data.kota}
+Catatan: ${data.catatan}
+                `.trim();
+
+                const whatsappUrl = `https://wa.me/6282214381966?text=${encodeURIComponent(whatsappMessage)}`;
+                window.open(whatsappUrl, '_blank');
+
+                loading.classList.remove('active');
+                successMessage.classList.add('show');
+                
+                this.reset();
+                
+                setTimeout(() => {
+                    successMessage.classList.remove('show');
+                }, 5000);
+
+            } catch (error) {
+                console.error('Error:', error);
+                loading.classList.remove('active');
+                alert('Terjadi kesalahan. Silakan coba lagi atau hubungi kami via WhatsApp.');
+            }
+        });
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Initialize
+        window.addEventListener('load', () => {
+            loadYouTubeVideos();
+            animateWhatsAppTestimonial();
+        });
+
+        // PWA Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                const swCode = `
+                    self.addEventListener('install', (e) => {
+                        e.waitUntil(self.skipWaiting());
+                    });
+                    self.addEventListener('activate', (e) => {
+                        e.waitUntil(self.clients.claim());
+                    });
+                    self.addEventListener('fetch', (e) => {
+                        e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
+                    });
+                `;
+                const blob = new Blob([swCode], { type: 'application/javascript' });
+                const swUrl = URL.createObjectURL(blob);
+                navigator.serviceWorker.register(swUrl)
+                    .then(() => console.log('Service Worker registered'))
+                    .catch(err => console.log('SW registration failed'));
+            });
+        }
+
+        // Animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.service-card, .testimonial-card, .chart-card, .youtube-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'all 0.6s ease-out';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>

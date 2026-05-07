@@ -1,0 +1,38 @@
+{
+  "name": "Suket Bersih – Jasa Potong Rumput Sleman",
+  "short_name": "Suket Bersih",
+  "description": "Jasa potong rumput dan bersih semak profesional di Sleman & Yogyakarta",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f2d12",
+  "theme_color": "#0f2d12",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "utilities"],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Booking Sekarang",
+      "url": "/#booking",
+      "description": "Buka form booking langsung"
+    },
+    {
+      "name": "Chat WhatsApp",
+      "url": "https://wa.me/6282214381966",
+      "description": "Chat langsung via WhatsApp"
+    }
+  ]
+}

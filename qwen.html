@@ -1,0 +1,1480 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Reresik Suket - Jasa Potong Rumput Profesional di Yogyakarta dan Sekitarnya">
+    <meta name="theme-color" content="#2E7D32">
+    <title>Reresik Suket - Jasa Potong Rumput Profesional</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiUmVyZXNpayBTdWtldCIsInNob3J0X25hbWUiOiJSZXJlc2lrIFN1a2V0IiwiZGVzY3JpcHRpb24iOiJKYXNhIFBvdG9uZyBSdW1wdXQgUHJvZmVzc2lvbmFsIiwic3RhcnRfdXJsIjoiLiIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiNmZmZmZmYiLCJ0aGVtZV9jb2xvciI6IiMyRTdEMzIifQ==">
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #2E7D32;
+            --secondary-color: #66BB6A;
+            --accent-color: #FFA726;
+            --dark-color: #1B5E20;
+            --light-color: #E8F5E9;
+            --text-color: #333;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: var(--white);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            padding: 0.5rem 0;
+            background: rgba(255,255,255,0.98);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            color: var(--accent-color);
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-menu a:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: width 0.3s;
+        }
+
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: var(--primary-color);
+            transition: all 0.3s;
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 70px;
+            background: linear-gradient(135deg, var(--light-color) 0%, var(--white) 100%);
+            padding: 4rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: var(--secondary-color);
+            opacity: 0.1;
+            border-radius: 50%;
+        }
+
+        .hero-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .hero-content h1 {
+            font-size: 3rem;
+            color: var(--dark-color);
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero-content .slogan {
+            font-size: 1.5rem;
+            color: var(--accent-color);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .hero-content p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            color: #666;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: var(--dark-color);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(46,125,50,0.3);
+        }
+
+        .btn-secondary {
+            background: var(--accent-color);
+            color: var(--white);
+        }
+
+        .btn-secondary:hover {
+            background: #F57C00;
+            transform: translateY(-3px);
+        }
+
+        .hero-image {
+            position: relative;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .hero-image img {
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        /* Stats Section */
+        .stats {
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 3rem 2rem;
+        }
+
+        .stats-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .stat-item h3 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-item p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        /* Services Section */
+        .services {
+            padding: 5rem 2rem;
+            background: var(--white);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--dark-color);
+            margin-bottom: 1rem;
+        }
+
+        .section-title p {
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .services-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .service-card {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--secondary-color);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .service-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--light-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+            color: var(--primary-color);
+        }
+
+        .service-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--dark-color);
+        }
+
+        /* Before After Section */
+        .before-after {
+            padding: 5rem 2rem;
+            background: var(--light-color);
+        }
+
+        .comparison-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .comparison-slider {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .comparison-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .comparison-image.before {
+            width: 50%;
+            border-right: 3px solid var(--white);
+            z-index: 2;
+        }
+
+        .comparison-image.after {
+            z-index: 1;
+        }
+
+        .slider-handle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            background: var(--white);
+            border-radius: 50%;
+            z-index: 3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: ew-resize;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .slider-handle i {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+        }
+
+        .comparison-labels {
+            position: absolute;
+            top: 20px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 4;
+            pointer-events: none;
+        }
+
+        .label {
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        /* Map Section */
+        .map-section {
+            padding: 5rem 2rem;
+            background: var(--white);
+        }
+
+        #map {
+            height: 500px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            z-index: 1;
+        }
+
+        .service-areas {
+            max-width: 1200px;
+            margin: 2rem auto 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .area-tag {
+            background: var(--light-color);
+            color: var(--dark-color);
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .area-tag i {
+            color: var(--accent-color);
+        }
+
+        /* Testimonials */
+        .testimonials {
+            padding: 5rem 2rem;
+            background: linear-gradient(135deg, var(--light-color) 0%, var(--white) 100%);
+        }
+
+        .testimonials-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .testimonial-card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .testimonial-card::before {
+            content: '"';
+            font-size: 4rem;
+            color: var(--secondary-color);
+            opacity: 0.3;
+            position: absolute;
+            top: 10px;
+            left: 20px;
+        }
+
+        .testimonial-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .testimonial-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .testimonial-info h4 {
+            color: var(--dark-color);
+            margin-bottom: 0.2rem;
+        }
+
+        .stars {
+            color: var(--accent-color);
+        }
+
+        .testimonial-text {
+            color: #666;
+            font-style: italic;
+            line-height: 1.8;
+        }
+
+        /* Charts Section */
+        .charts-section {
+            padding: 5rem 2rem;
+            background: var(--white);
+        }
+
+        .charts-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+        }
+
+        .chart-card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .chart-card h3 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: var(--dark-color);
+        }
+
+        /* Registration Form */
+        .registration {
+            padding: 5rem 2rem;
+            background: var(--light-color);
+        }
+
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--white);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .gps-btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.8rem;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .gps-btn:hover {
+            background: #F57C00;
+        }
+
+        /* WhatsApp Float Button */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #25D366;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: 0 5px 20px rgba(37,211,102,0.4);
+            cursor: pointer;
+            z-index: 999;
+            animation: pulse 2s infinite;
+            text-decoration: none;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark-color);
+            color: white;
+            padding: 3rem 2rem 1rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+
+        .footer-section p, .footer-section a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            line-height: 2;
+        }
+
+        .footer-section a:hover {
+            color: var(--accent-color);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .social-links a:hover {
+            background: var(--accent-color);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.6);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-menu {
+                position: fixed;
+                left: -100%;
+                top: 70px;
+                flex-direction: column;
+                background: var(--white);
+                width: 100%;
+                text-align: center;
+                transition: 0.3s;
+                padding: 2rem 0;
+                box-shadow: 0 10px 27px rgba(0,0,0,0.05);
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .hero-container {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .charts-container {
+                grid-template-columns: 1fr;
+            }
+
+            .comparison-slider {
+                height: 300px;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loading.active {
+            display: flex;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255,255,255,0.3);
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Success Message */
+        .success-message {
+            display: none;
+            background: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: slideIn 0.5s;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <i class="fas fa-leaf"></i>
+                <span>Reresik Suket</span>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="#home">Beranda</a></li>
+                <li><a href="#services">Layanan</a></li>
+                <li><a href="#portfolio">Portfolio</a></li>
+                <li><a href="#map">Lokasi</a></li>
+                <li><a href="#testimonials">Testimoni</a></li>
+                <li><a href="#register">Pesan</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1>Reresik Suket</h1>
+                <p class="slogan">"Hijaukan Lingkungan, Rapikan Halaman"</p>
+                <p>Jasa potong rumput profesional di Yogyakarta dan sekitarnya. Kami siap melayani kebutuhan perawatan taman dan halaman Anda dengan hasil terbaik dan harga terjangkau.</p>
+                <div class="hero-buttons">
+                    <a href="#register" class="btn btn-primary">
+                        <i class="fas fa-calendar-check"></i>
+                        Pesan Sekarang
+                    </a>
+                    <a href="https://wa.me/6282214381966" class="btn btn-secondary" target="_blank">
+                        <i class="fab fa-whatsapp"></i>
+                        Hubungi Kami
+                    </a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="https://images.unsplash.com/photo-1558904541-efa843a96f01?w=600" alt="Lawn Mowing Service">
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="stats-container">
+            <div class="stat-item">
+                <h3>500+</h3>
+                <p>Proyek Selesai</p>
+            </div>
+            <div class="stat-item">
+                <h3>350+</h3>
+                <p>Pelanggan Puas</p>
+            </div>
+            <div class="stat-item">
+                <h3>5+</h3>
+                <p>Tahun Pengalaman</p>
+            </div>
+            <div class="stat-item">
+                <h3>7</h3>
+                <p>Kota Dilayani</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services" id="services">
+        <div class="section-title">
+            <h2>Layanan Kami</h2>
+            <p>Kami menyediakan berbagai layanan perawatan taman dan halaman untuk memenuhi kebutuhan Anda</p>
+        </div>
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-cut"></i>
+                </div>
+                <h3>Potong Rumput</h3>
+                <p>Pemotongan rumput profesional dengan peralatan modern untuk hasil yang rapi dan merata</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-seedling"></i>
+                </div>
+                <h3>Perawatan Taman</h3>
+                <p>Perawatan tanaman hias, pemupukan, dan penyiraman untuk taman yang asri</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-trash-alt"></i>
+                </div>
+                <h3>Pembersihan Halaman</h3>
+                <p>Pembersihan sampah daun, ranting, dan kotoran di area halaman Anda</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-tree"></i>
+                </div>
+                <h3>Pemangkasan Pohon</h3>
+                <p>Pemangkasan dan perapihan pohon serta tanaman perdu di halaman</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Before After Section -->
+    <section class="before-after" id="portfolio">
+        <div class="section-title">
+            <h2>Hasil Kerja Kami</h2>
+            <p>Lihat perbedaan sebelum dan sesudah layanan kami</p>
+        </div>
+        <div class="comparison-container">
+            <div class="comparison-slider" id="comparisonSlider">
+                <div class="comparison-image after" style="background-image: url('https://images.unsplash.com/photo-1558904541-efa843a96f01?w=1000')"></div>
+                <div class="comparison-image before" style="background-image: url('https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=1000')" id="beforeImage"></div>
+                <div class="comparison-labels">
+                    <span class="label">Sebelum</span>
+                    <span class="label">Sesudah</span>
+                </div>
+                <div class="slider-handle" id="sliderHandle">
+                    <i class="fas fa-arrows-alt-h"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Map Section -->
+    <section class="map-section" id="map">
+        <div class="section-title">
+            <h2>Lokasi & Area Layanan</h2>
+            <p>Kami melayani wilayah Yogyakarta dan sekitarnya</p>
+        </div>
+        <div id="map"></div>
+        <div class="service-areas">
+            <div class="area-tag"><i class="fas fa-map-marker-alt"></i> Yogyakarta</div>
+            <div class="area-tag"><i class="fas fa-map-marker-alt"></i> Sleman</div>
+            <div class="area-tag"><i class="fas fa-map-marker-alt"></i> Bantul</div>
+            <div class="area-tag"><i class="fas fa-map-marker-alt"></i> Solo</div>
+            <div class="area-tag"><i class="fas fa-map-marker-alt"></i> Boyolali</div>
+            <div class="area-tag"><i class="fas fa-map-marker-alt"></i> Surakarta</div>
+            <div class="area-tag"><i class="fas fa-map-marker-alt"></i> Magelang</div>
+            <div class="area-tag"><i class="fas fa-map-marker-alt"></i> Purworejo</div>
+        </div>
+    </section>
+
+    <!-- Charts Section -->
+    <section class="charts-section">
+        <div class="section-title">
+            <h2>Statistik Layanan</h2>
+            <p>Data real-time layanan kami</p>
+        </div>
+        <div class="charts-container">
+            <div class="chart-card">
+                <h3>Layanan per Bulan</h3>
+                <canvas id="monthlyChart"></canvas>
+            </div>
+            <div class="chart-card">
+                <h3>Distribusi Area Layanan</h3>
+                <canvas id="areaChart"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials" id="testimonials">
+        <div class="section-title">
+            <h2>Testimoni Pelanggan</h2>
+            <p>Apa kata mereka tentang layanan kami</p>
+        </div>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <div class="testimonial-header">
+                    <div class="testimonial-avatar">BS</div>
+                    <div class="testimonial-info">
+                        <h4>Budi Santoso</h4>
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+                <p class="testimonial-text">"Hasilnya sangat memuaskan! Rumput halaman rumah saya jadi rapi dan bersih. Timnya profesional dan tepat waktu. Sangat recommended!"</p>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-header">
+                    <div class="testimonial-avatar">AR</div>
+                    <div class="testimonial-info">
+                        <h4>Ani Rahayu</h4>
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+                <p class="testimonial-text">"Sudah 3 kali pakai jasa Reresik Suket untuk kantor kami di Sleman. Hasil selalu konsisten bagus dan harga sangat terjangkau."</p>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-header">
+                    <div class="testimonial-avatar">DW</div>
+                    <div class="testimonial-info">
+                        <h4>Dedi Wijaya</h4>
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                </div>
+                <p class="testimonial-text">"Pelayanan cepat dan responsif. Saya pesan dari Magelang, tim datang tepat waktu. Halaman rumah jadi hijau dan asri kembali."</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Registration Form -->
+    <section class="registration" id="register">
+        <div class="section-title">
+            <h2>Form Pemesanan</h2>
+            <p>Isi form di bawah untuk memesan layanan kami</p>
+        </div>
+        <div class="form-container">
+            <div class="success-message" id="successMessage">
+                <i class="fas fa-check-circle"></i> Pesanan berhasil dikirim! Kami akan menghubungi Anda via WhatsApp.
+            </div>
+            <form id="orderForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nama">Nama Lengkap *</label>
+                        <input type="text" id="nama" name="nama" required placeholder="Masukkan nama lengkap">
+                    </div>
+                    <div class="form-group">
+                        <label for="telepon">Nomor Telepon *</label>
+                        <input type="tel" id="telepon" name="telepon" required placeholder="08xx-xxxx-xxxx">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="alamat">Alamat Lengkap *</label>
+                    <textarea id="alamat" name="alamat" rows="3" required placeholder="Masukkan alamat lengkap"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Lokasi GPS *</label>
+                    <button type="button" class="gps-btn" id="getGPS">
+                        <i class="fas fa-location-crosshairs"></i>
+                        Dapatkan Lokasi GPS
+                    </button>
+                    <input type="text" id="gps" name="gps" readonly placeholder="Klik tombol di atas untuk mendapatkan lokasi" style="margin-top: 0.5rem;">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="jenisLayanan">Jenis Layanan *</label>
+                        <select id="jenisLayanan" name="jenisLayanan" required>
+                            <option value="">Pilih Layanan</option>
+                            <option value="Potong Rumput">Potong Rumput</option>
+                            <option value="Perawatan Taman">Perawatan Taman</option>
+                            <option value="Pembersihan Halaman">Pembersihan Halaman</option>
+                            <option value="Pemangkasan Pohon">Pemangkasan Pohon</option>
+                            <option value="Paket Lengkap">Paket Lengkap</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="luasLahan">Luas Lahan (m²) *</label>
+                        <input type="number" id="luasLahan" name="luasLahan" required placeholder="Contoh: 100">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="tanggal">Tanggal Pengerjaan *</label>
+                        <input type="date" id="tanggal" name="tanggal" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="kota">Kota/Kabupaten *</label>
+                        <select id="kota" name="kota" required>
+                            <option value="">Pilih Kota</option>
+                            <option value="Yogyakarta">Yogyakarta</option>
+                            <option value="Sleman">Sleman</option>
+                            <option value="Bantul">Bantul</option>
+                            <option value="Solo">Solo</option>
+                            <option value="Boyolali">Boyolali</option>
+                            <option value="Surakarta">Surakarta</option>
+                            <option value="Magelang">Magelang</option>
+                            <option value="Purworejo">Purworejo</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="catatan">Catatan Tambahan</label>
+                    <textarea id="catatan" name="catatan" rows="3" placeholder="Informasi tambahan atau permintaan khusus"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">
+                    <i class="fas fa-paper-plane"></i>
+                    Kirim Pesanan
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Reresik Suket</h3>
+                <p>Jasa potong rumput profesional yang siap melayani kebutuhan perawatan taman dan halaman Anda di Yogyakarta dan sekitarnya.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    <a href="#"><i class="fab fa-google"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Kontak Kami</h3>
+                <p><i class="fas fa-map-marker-alt"></i> Perumahan Wahana Praja<br>Jl. Drupadi no.50, Widodo Martani<br>Ngemplak, Sleman, Yogyakarta</p>
+                <p><i class="fas fa-phone"></i> 0822-1438-1966</p>
+                <p><i class="fas fa-envelope"></i> info@reresiksuket.com</p>
+            </div>
+            <div class="footer-section">
+                <h3>Jam Operasional</h3>
+                <p>Senin - Sabtu: 08.00 - 17.00</p>
+                <p>Minggu: By Appointment</p>
+                <p>Layanan darurat tersedia 24 jam</p>
+            </div>
+            <div class="footer-section">
+                <h3>Area Layanan</h3>
+                <p>Yogyakarta, Sleman, Bantul, Solo, Boyolali, Surakarta, Magelang, Purworejo</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Reresik Suket. All rights reserved. | Made with <i class="fas fa-heart" style="color: var(--accent-color);"></i> in Yogyakarta</p>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Float Button -->
+    <a href="https://wa.me/6282214381966?text=Halo%20Reresik%20Suket,%20saya%20tertarik%20dengan%20layanan%20Anda" class="whatsapp-float" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Loading Overlay -->
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Mobile Menu Toggle
+        const hamburger = document.querySelector('.hamburger');
+        const navMenu = document.querySelector('.nav-menu');
+
+        hamburger.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                navMenu.classList.remove('active');
+            });
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Before/After Slider
+        const slider = document.getElementById('comparisonSlider');
+        const beforeImage = document.getElementById('beforeImage');
+        const sliderHandle = document.getElementById('sliderHandle');
+        let isDragging = false;
+
+        const updateSlider = (x) => {
+            const rect = slider.getBoundingClientRect();
+            let percentage = ((x - rect.left) / rect.width) * 100;
+            percentage = Math.max(0, Math.min(100, percentage));
+            beforeImage.style.width = percentage + '%';
+            sliderHandle.style.left = percentage + '%';
+        };
+
+        sliderHandle.addEventListener('mousedown', () => isDragging = true);
+        document.addEventListener('mouseup', () => isDragging = false);
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            updateSlider(e.clientX);
+        });
+
+        // Touch events for mobile
+        sliderHandle.addEventListener('touchstart', () => isDragging = true);
+        document.addEventListener('touchend', () => isDragging = false);
+        document.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            updateSlider(e.touches[0].clientX);
+        });
+
+        // Initialize Map
+        const map = L.map('map').setView([-7.7407, 110.4457], 10);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Add marker for business location
+        const businessLocation = [-7.7407, 110.4457];
+        L.marker(businessLocation).addTo(map)
+            .bindPopup('<b>Reresik Suket</b><br>Perumahan Wahana Praja<br>Jl. Drupadi no.50')
+            .openPopup();
+
+        // Add circles for service areas
+        const serviceAreas = [
+            { coords: [-7.7956, 110.3695], name: 'Yogyakarta' },
+            { coords: [-7.7036, 110.4457], name: 'Sleman' },
+            { coords: [-7.8753, 110.3264], name: 'Bantul' },
+            { coords: [-7.5667, 110.8167], name: 'Solo' },
+            { coords: [-7.5292, 110.6833], name: 'Boyolali' },
+            { coords: [-7.4833, 110.8167], name: 'Surakarta' },
+            { coords: [-7.4833, 110.2167], name: 'Magelang' },
+            { coords: [-7.8500, 109.9833], name: 'Purworejo' }
+        ];
+
+        serviceAreas.forEach(area => {
+            L.circle(area.coords, {
+                color: '#2E7D32',
+                fillColor: '#66BB6A',
+                fillOpacity: 0.3,
+                radius: 5000
+            }).addTo(map).bindPopup(area.name);
+        });
+
+        // Charts
+        const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
+        const monthlyChart = new Chart(monthlyCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Jumlah Pesanan',
+                    data: [45, 52, 48, 65, 72, 80],
+                    borderColor: '#2E7D32',
+                    backgroundColor: 'rgba(46, 125, 50, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        const areaCtx = document.getElementById('areaChart').getContext('2d');
+        const areaChart = new Chart(areaCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Yogyakarta', 'Sleman', 'Solo', 'Magelang', 'Lainnya'],
+                datasets: [{
+                    data: [35, 25, 15, 15, 10],
+                    backgroundColor: [
+                        '#2E7D32',
+                        '#66BB6A',
+                        '#FFA726',
+                        '#4CAF50',
+                        '#81C784'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+
+        // GPS Location
+        document.getElementById('getGPS').addEventListener('click', function() {
+            if (navigator.geolocation) {
+                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mendapatkan lokasi...';
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const gpsInput = document.getElementById('gps');
+                        gpsInput.value = `${position.coords.latitude}, ${position.coords.longitude}`;
+                        this.innerHTML = '<i class="fas fa-check"></i> Lokasi berhasil didapat';
+                        setTimeout(() => {
+                            this.innerHTML = '<i class="fas fa-location-crosshairs"></i> Dapatkan Lokasi GPS';
+                        }, 2000);
+                    },
+                    (error) => {
+                        alert('Gagal mendapatkan lokasi. Pastikan GPS aktif.');
+                        this.innerHTML = '<i class="fas fa-location-crosshairs"></i> Dapatkan Lokasi GPS';
+                    }
+                );
+            } else {
+                alert('Browser Anda tidak mendukung GPS');
+            }
+        });
+
+        // Form Submission
+        document.getElementById('orderForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const loading = document.getElementById('loading');
+            const successMessage = document.getElementById('successMessage');
+            const formData = new FormData(this);
+            
+            // Collect form data
+            const data = {
+                timestamp: new Date().toISOString(),
+                nama: formData.get('nama'),
+                telepon: formData.get('telepon'),
+                alamat: formData.get('alamat'),
+                gps: formData.get('gps'),
+                jenisLayanan: formData.get('jenisLayanan'),
+                luasLahan: formData.get('luasLahan'),
+                tanggal: formData.get('tanggal'),
+                kota: formData.get('kota'),
+                catatan: formData.get('catatan')
+            };
+
+            loading.classList.add('active');
+
+            try {
+                // Send to Google Sheets (using Google Apps Script)
+                // Note: You need to create a Google Apps Script web app to receive this data
+                const response = await fetch('YOUR_GOOGLE_APPS_SCRIPT_URL', {
+                    method: 'POST',
+                    body: JSON.stringify(data),
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                // Send WhatsApp notification (simulation)
+                const whatsappMessage = `
+*Pesanan Baru - Reresik Suket*
+
+Nama: ${data.nama}
+Telepon: ${data.telepon}
+Alamat: ${data.alamat}
+GPS: ${data.gps}
+Layanan: ${data.jenisLayanan}
+Luas Lahan: ${data.luasLahan} m²
+Tanggal: ${data.tanggal}
+Kota: ${data.kota}
+Catatan: ${data.catatan}
+                `.trim();
+
+                // Open WhatsApp with pre-filled message
+                const whatsappUrl = `https://wa.me/6282214381966?text=${encodeURIComponent(whatsappMessage)}`;
+                window.open(whatsappUrl, '_blank');
+
+                loading.classList.remove('active');
+                successMessage.classList.add('show');
+                
+                // Reset form
+                this.reset();
+                
+                setTimeout(() => {
+                    successMessage.classList.remove('show');
+                }, 5000);
+
+            } catch (error) {
+                console.error('Error:', error);
+                loading.classList.remove('active');
+                alert('Terjadi kesalahan. Silakan coba lagi atau hubungi kami via WhatsApp.');
+            }
+        });
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Update charts with live data (simulation)
+        setInterval(() => {
+            const newData = monthlyChart.data.datasets[0].data;
+            newData.shift();
+            newData.push(Math.floor(Math.random() * 40) + 40);
+            monthlyChart.update();
+        }, 10000);
+
+        // PWA Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                // Create a simple service worker
+                const swCode = `
+                    self.addEventListener('install', (e) => {
+                        e.waitUntil(self.skipWaiting());
+                    });
+                    self.addEventListener('activate', (e) => {
+                        e.waitUntil(self.clients.claim());
+                    });
+                    self.addEventListener('fetch', (e) => {
+                        e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
+                    });
+                `;
+                const blob = new Blob([swCode], { type: 'application/javascript' });
+                const swUrl = URL.createObjectURL(blob);
+                navigator.serviceWorker.register(swUrl)
+                    .then(() => console.log('Service Worker registered'))
+                    .catch(err => console.log('SW registration failed'));
+            });
+        }
+
+        // Add animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements
+        document.querySelectorAll('.service-card, .testimonial-card, .chart-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'all 0.6s ease-out';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
